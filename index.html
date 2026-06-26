@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanhai: Spirit Era — Idle Beast Collector</title>
+    <meta name="description" content="Hatch, collect, and evolve 55 mythical spirit beasts from Chinese mythology. An idle game inspired by the Classic of Mountains and Seas.">
+    <style>
+        :root {
+            --bg: #0d0d1a;
+            --card: #1a1a2e;
+            --accent: #00d4ff;
+            --gold: #d4a574;
+            --purple: #a855f7;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 24px 80px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.12) 0%, transparent 70%),
+                        linear-gradient(180deg, #0d0d1a 0%, #12122a 100%);
+        }
+        .hero img { width: 140px; height: 140px; border-radius: 32px; box-shadow: 0 0 60px rgba(0,212,255,0.2); margin-bottom: 32px; }
+        .hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { font-size: 20px; color: var(--muted); max-width: 560px; margin: 0 auto 32px; }
+        .badge { display: inline-block; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 6px 18px; border-radius: 20px; font-size: 13px; margin: 0 6px; color: var(--muted); }
+
+        .cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--accent); color: #0d0d1a; font-weight: 700; font-size: 18px;
+            padding: 14px 36px; border-radius: 14px; text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.3); }
+
+        section { max-width: 1000px; margin: 0 auto; padding: 64px 24px; }
+        section h2 { font-size: 32px; font-weight: 700; text-align: center; margin-bottom: 48px; }
+        section h2 span { color: var(--accent); }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .feature-card {
+            background: var(--card); border-radius: 16px; padding: 28px;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.3s;
+        }
+        .feature-card:hover { border-color: rgba(0,212,255,0.2); }
+        .feature-card .icon { font-size: 32px; margin-bottom: 16px; }
+        .feature-card h3 { font-size: 18px; margin-bottom: 8px; }
+        .feature-card p { font-size: 14px; color: var(--muted); }
+
+        .stats { display: flex; justify-content: center; gap: 64px; flex-wrap: wrap; padding: 48px 24px; }
+        .stat { text-align: center; }
+        .stat .num { font-size: 40px; font-weight: 800; color: var(--accent); }
+        .stat .label { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+        .realm-bar { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 32px; }
+        .realm {
+            background: var(--card); border-radius: 12px; padding: 16px 24px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.06); min-width: 120px;
+        }
+        .realm .emoji { font-size: 28px; }
+        .realm .name { font-size: 14px; font-weight: 600; margin-top: 6px; }
+        .realm .bonus { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+        .tier-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 32px; }
+        .tier-tag { padding: 6px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; }
+        .tier-common { background: rgba(148,163,184,0.15); color: #94a3b8; }
+        .tier-spirit { background: rgba(34,197,94,0.12); color: #22c55e; }
+        .tier-sacred { background: rgba(59,130,246,0.12); color: #3b82f6; }
+        .tier-immortal { background: rgba(168,85,247,0.12); color: #a855f7; }
+        .tier-divine { background: rgba(212,167,116,0.15); color: #d4a574; }
+        .tier-mythic { background: rgba(236,72,153,0.12); color: #ec4899; }
+
+        .iap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+        .iap-card { background: var(--card); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
+        .iap-card .price { font-size: 24px; font-weight: 700; color: var(--accent); }
+        .iap-card .name { font-size: 14px; margin-top: 4px; }
+        .iap-card .desc { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+        footer {
+            text-align: center; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06);
+            color: var(--muted); font-size: 13px;
+        }
+        footer a { color: var(--accent); text-decoration: none; margin: 0 12px; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .stats { gap: 32px; }
+            .stat .num { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <img src="app_icon.png" alt="Shanhai: Spirit Era Icon" width="140" height="140" style="border-radius:28px">
+    <h1>Shanhai: <span>Spirit Era</span></h1>
+    <p>Hatch, collect, and evolve 55 mythical spirit beasts from the Classic of Mountains and Seas — even while you're away.</p>
+    <div style="margin-bottom:28px">
+        <span class="badge">🐉 Idle</span>
+        <span class="badge">🥚 Collect</span>
+        <span class="badge">⚡ Evolve</span>
+        <span class="badge">🏔️ Explore</span>
+    </div>
+    <a href="https://apps.apple.com/app/id6784314634" class="cta">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.16-1.13.41-2.31 1.05-3.11z"/></svg>
+        Download on the App Store
+    </a>
+</header>
+
+<section>
+    <div class="stats">
+        <div class="stat"><div class="num">55</div><div class="label">Spirit Beasts</div></div>
+        <div class="stat"><div class="num">6</div><div class="label">Rarity Tiers</div></div>
+        <div class="stat"><div class="num">5</div><div class="label">Mystical Realms</div></div>
+        <div class="stat"><div class="num">3</div><div class="label">Growth Stages</div></div>
+    </div>
+</section>
+
+<section>
+    <h2>Core <span>Features</span></h2>
+    <div class="features">
+        <div class="feature-card">
+            <div class="icon">⚡</div>
+            <h3>Idle Qi Collection</h3>
+            <p>Your spirit beasts gather Qi automatically, even offline. Progress never stops — claim your rewards anytime.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🥚</div>
+            <h3>Hatch & Discover</h3>
+            <p>Incubate eggs across six rarity tiers. Each hatch is a surprise — from gentle Common beasts to legendary Mythic creatures.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🔄</div>
+            <h3>Merge to Evolve</h3>
+            <p>Combine two beasts of the same tier to create a higher-tier creature. Strategize your merges for maximum power.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🏔️</div>
+            <h3>Explore Five Realms</h3>
+            <p>Journey from the Mortal Realm to the Great Wild. Each realm unlocks new beasts, bonuses, and exploration rewards.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🍖</div>
+            <h3>Feed & Nurture</h3>
+            <p>Keep your beasts well-fed for peak Qi production. Hungry beasts work slower — visit regularly to care for your collection.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">📖</div>
+            <h3>Complete Your Bestiary</h3>
+            <p>Track every beast you've discovered. The ultimate goal: collect all 55 entries and become a true Beast Master.</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Beast <span>Tiers</span></h2>
+    <p style="text-align:center;color:var(--muted);margin-bottom:24px">From humble beginnings to legendary status — every beast has its place in the Shanhai world.</p>
+    <div class="tier-grid">
+        <span class="tier-tag tier-common">🟢 Common ×20</span>
+        <span class="tier-tag tier-spirit">🟢 Spirit ×12</span>
+        <span class="tier-tag tier-sacred">🔵 Sacred ×8</span>
+        <span class="tier-tag tier-immortal">🟣 Immortal ×6</span>
+        <span class="tier-tag tier-divine">🟠 Divine ×4</span>
+        <span class="tier-tag tier-mythic">🩷 Mythic ×5</span>
+    </div>
+</section>
+
+<section>
+    <h2>Five <span>Realms</span></h2>
+    <p style="text-align:center;color:var(--muted);margin-bottom:24px">Unlock new realms by growing your collection and accumulating Qi. Each realm brings stronger bonuses and rarer beasts.</p>
+    <div class="realm-bar">
+        <div class="realm"><div class="emoji">🏘️</div><div class="name">Mortal Realm</div><div class="bonus">Starting Realm</div></div>
+        <div class="realm"><div class="emoji">⛰️</div><div class="name">Spirit Mountain</div><div class="bonus">+50% Qi</div></div>
+        <div class="realm"><div class="emoji">❄️</div><div class="name">Kunlun</div><div class="bonus">+150% Qi</div></div>
+        <div class="realm"><div class="emoji">🌳</div><div class="name">Penglai</div><div class="bonus">+300% Qi</div></div>
+        <div class="realm"><div class="emoji">⭐</div><div class="name">Great Wild</div><div class="bonus">+600% Qi</div></div>
+    </div>
+</section>
+
+<section>
+    <h2>Free to <span>Play</span></h2>
+    <p style="text-align:center;color:var(--muted);margin-bottom:24px">Enjoy the full game for free. Optional purchases for those who want to accelerate their journey.</p>
+    <div class="iap-grid">
+        <div class="iap-card"><div class="price">$4.99</div><div class="name">Remove Ads</div><div class="desc">One-time purchase</div></div>
+        <div class="iap-card"><div class="price">$0.99</div><div class="name">120 Jade</div><div class="desc">Premium currency</div></div>
+        <div class="iap-card"><div class="price">$2.99</div><div class="name">400 Jade</div><div class="desc">Great value</div></div>
+        <div class="iap-card"><div class="price">$5.99</div><div class="name">1000 Jade</div><div class="desc">Best value</div></div>
+        <div class="iap-card"><div class="price">$1.99</div><div class="name">Starter Pack</div><div class="desc">Egg + 300 Jade</div></div>
+        <div class="iap-card"><div class="price">$3.99</div><div class="name">Legendary Egg</div><div class="desc">Mythic beast</div></div>
+        <div class="iap-card"><div class="price">$2.99</div><div class="name">Exploration Pass</div><div class="desc">30-day boost</div></div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Shanhai: Spirit Era. All rights reserved.</p>
+    <p style="margin-top:8px">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/support">Support</a>
+        <a href="mailto:rivermoon_surport@126.com">Contact</a>
+    </p>
+</footer>
+
+</body>
+</html>
